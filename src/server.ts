@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
-import { promises } from 'dns';
 
 (async () => {
 
@@ -31,12 +30,12 @@ import { promises } from 'dns';
   /**************************************************************************** */
 
 
-  app.get("/filteredImage", async (request, response) => {
-    const imageUrl = request.query.image_url
+  app.get("/filteredImage", async (request: express.Request, response: express.Response) => {
+    const imageUrl : string = request.query.image_url
     if (!imageUrl) {
       response.status(400).send({message: 'Image not provided. Please provide an image_url query param'})
     }
-    const filteredImagePath  = await filterImageFromURL(imageUrl)
+    const filteredImagePath = await filterImageFromURL(imageUrl)
     const removeImage = () => deleteLocalFiles([filteredImagePath])
     response.sendFile(filteredImagePath, removeImage)
   })
